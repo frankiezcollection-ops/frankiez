@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>FRANKIEZ — 3333 NFTs on Ethereum</title>
+<meta name="description" content="3333 hand-drawn frankiez with attitude. Banana suits, fire eyes, drama queens. Mint on Ethereum." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  /* ============================================================
+     FRANKIEZ — whitelist capture
+     Design tokens
+     - ink        #14110F  near-black, warm
+     - paper      #FDF6E3  off-white comic page
+     - shock      #FF2E63  hot pink (from Body/Drama Queen)
+     - volt       #00E5C7  teal (from Body/Background)
+     - sun        #FFC93C  comic yellow (from backgrounds)
+     - violet     #7B2FF7  pop purple
+     ============================================================ */
+  :root{
+    --ink:#14110F;
+    --paper:#FDF6E3;
+    --shock:#FF2E63;
+    --volt:#00E5C7;
+    --sun:#FFC93C;
+    --violet:#7B2FF7;
+    --line:3px solid var(--ink);
+    --shadow:6px 6px 0 var(--ink);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:'Space Grotesk',system-ui,sans-serif;
+    background:var(--paper);
+    color:var(--ink);
+    line-height:1.5;
+    overflow-x:hidden;
+    /* halftone dot texture */
+    background-image:radial-gradient(var(--ink) 1px, transparent 1.4px);
+    background-size:22px 22px;
+    background-position:0 0;
+  }
+  .wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+
+  /* ---------- type ---------- */
+  h1,h2,h3,.display{font-family:'Archivo Black',sans-serif;text-transform:uppercase;line-height:.95;letter-spacing:-.01em}
+  .mono{font-family:'Space Mono',monospace}
+  .eyebrow{font-family:'Space Mono',monospace;font-weight:700;font-size:.72rem;letter-spacing:.28em;text-transform:uppercase}
+
+  /* ---------- top bar ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:50;
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 20px;
+    background:var(--sun);
+    border-bottom:var(--line);
+  }
+  .brand{font-family:'Archivo Black';font-size:1.1rem;letter-spacing:-.02em;text-transform:uppercase}
+  .brand span{color:var(--shock);-webkit-text-stroke:1px var(--ink)}
+  .topbar a.x{
+    font-family:'Space Mono';font-weight:700;font-size:.8rem;text-decoration:none;color:var(--ink);
+    background:var(--paper);border:var(--line);padding:6px 12px;box-shadow:3px 3px 0 var(--ink);
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .topbar a.x:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+  .topbar a.x:active{transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+
+  /* ---------- hero ---------- */
+  .hero-bg{
+    position:relative;
+    background:url('assets/web/meadow.jpg') center top/cover no-repeat;
+    border-bottom:var(--line);
+  }
+  /* soft scrim so dark text stays readable over sky/grass */
+  .hero-bg::before{
+    content:"";position:absolute;inset:0;
+    background:linear-gradient(180deg, rgba(253,246,227,.55) 0%, rgba(253,246,227,.15) 40%, rgba(253,246,227,0) 70%);
+    pointer-events:none;
+  }
+  .hero{padding:64px 0 40px;text-align:center;position:relative;z-index:1}
+  .hero .eyebrow{color:var(--ink);background:var(--sun);display:inline-block;padding:5px 12px;border:var(--line);box-shadow:3px 3px 0 var(--ink)}
+  .hero h1{
+    font-size:clamp(2.8rem,11vw,7rem);
+    margin:18px 0 18px;
+    text-shadow:3px 3px 0 var(--paper);
+  }
+  .hero h1 .out{color:var(--paper);-webkit-text-stroke:2px var(--ink);text-shadow:none}
+  .hero p.lead{
+    max-width:560px;margin:0 auto 30px;font-size:1.05rem;font-weight:500;
+    background:rgba(253,246,227,.82);padding:12px 18px;border:2px solid var(--ink);
+  }
+  .cta-row{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}
+  .btn{
+    display:inline-block;cursor:pointer;text-decoration:none;
+    font-family:'Archivo Black';text-transform:uppercase;font-size:.95rem;letter-spacing:.02em;
+    padding:14px 26px;border:var(--line);box-shadow:var(--shadow);color:var(--ink);
+    transition:transform .08s ease, box-shadow .08s ease;
+    background:var(--paper);
+  }
+  .btn:hover{transform:translate(-2px,-2px);box-shadow:8px 8px 0 var(--ink)}
+  .btn:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+  .btn.shock{background:var(--shock);color:var(--paper)}
+  .btn.volt{background:var(--volt)}
+
+  /* ---------- character strip ---------- */
+  .strip{display:flex;gap:0;justify-content:center;margin:46px 0 8px;flex-wrap:wrap}
+  .chip{
+    width:140px;height:140px;border:var(--line);
+    margin:-1.5px;background:var(--paper);overflow:hidden;
+    transition:transform .12s ease;
+  }
+  .chip img{width:100%;height:100%;object-fit:cover;display:block}
+  .chip:hover{transform:scale(1.08) rotate(-2deg);position:relative;z-index:5;box-shadow:var(--shadow)}
+  @media(max-width:680px){.chip{width:33.333vw;height:33.333vw;max-width:140px;max-height:140px}}
+  .chip-note{text-align:center;margin-top:14px}
+
+  /* ---------- stat cards ---------- */
+  .stats{
+    display:grid;grid-template-columns:repeat(4,1fr);gap:0;
+    border:var(--line);box-shadow:var(--shadow);margin:50px 0;background:var(--ink);
+  }
+  .stat{background:var(--paper);padding:22px 16px;border-right:var(--line)}
+  .stat:last-child{border-right:none}
+  .stat .k{font-family:'Space Mono';font-weight:700;font-size:.68rem;letter-spacing:.2em;text-transform:uppercase;color:var(--shock)}
+  .stat .v{font-family:'Archivo Black';font-size:1.7rem;margin-top:6px}
+  @media(max-width:680px){
+    .stats{grid-template-columns:repeat(2,1fr)}
+    .stat:nth-child(2){border-right:none}
+    .stat:nth-child(1),.stat:nth-child(2){border-bottom:var(--line)}
+  }
+
+  /* ---------- section heading ---------- */
+  .sec{padding:30px 0 10px}
+  .sec h2{font-size:clamp(2rem,7vw,3.4rem)}
+  .sec .eyebrow{color:var(--violet);margin-bottom:10px;display:block}
+
+  /* ---------- choice gate ---------- */
+  .gate{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:24px 0 60px}
+  @media(max-width:680px){.gate{grid-template-columns:1fr}}
+  .gate-card{
+    border:var(--line);box-shadow:var(--shadow);padding:30px 26px;background:var(--paper);cursor:pointer;
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .gate-card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 var(--ink)}
+  .gate-card .ic{font-size:2.4rem}
+  .gate-card h3{font-size:1.3rem;margin:12px 0 8px}
+  .gate-card p{font-size:.95rem}
+  .gate-card.a{background:var(--sun)}
+  .gate-card.b{background:var(--volt)}
+
+  /* ---------- whitelist flow ---------- */
+  .panel{display:none}
+  .panel.active{display:block;animation:pop .25s ease}
+  @keyframes pop{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+  .steps{display:flex;flex-direction:column;gap:0;border:var(--line);box-shadow:var(--shadow);margin:8px 0 26px;background:var(--ink)}
+  .step{
+    background:var(--paper);display:flex;align-items:center;gap:18px;padding:18px 20px;
+    border-bottom:var(--line);
+  }
+  .step:last-child{border-bottom:none}
+  .step .no{font-family:'Archivo Black';font-size:1.4rem;min-width:42px;color:var(--shock)}
+  .step .txt{flex:1}
+  .step .txt b{display:block;font-family:'Space Grotesk';font-weight:700;font-size:1rem}
+  .step .txt span{font-size:.85rem;opacity:.8}
+  .step a.open{
+    font-family:'Space Mono';font-weight:700;font-size:.78rem;text-decoration:none;color:var(--ink);
+    border:var(--line);padding:7px 14px;background:var(--sun);box-shadow:3px 3px 0 var(--ink);white-space:nowrap;
+    transition:transform .08s ease, box-shadow .08s ease;
+  }
+  .step a.open:hover{transform:translate(-2px,-2px);box-shadow:5px 5px 0 var(--ink)}
+
+  .form{border:var(--line);box-shadow:var(--shadow);padding:26px;background:var(--paper)}
+  .form label{display:block;font-family:'Space Mono';font-weight:700;font-size:.74rem;letter-spacing:.16em;text-transform:uppercase;margin:0 0 8px}
+  .form input,.form textarea{
+    width:100%;font-family:'Space Grotesk';font-size:1rem;padding:13px 14px;border:var(--line);background:var(--paper);
+    margin-bottom:20px;color:var(--ink);
+  }
+  .form input:focus,.form textarea:focus{outline:none;box-shadow:var(--shadow);transform:translate(-2px,-2px)}
+  .form textarea{min-height:84px;resize:vertical}
+  .backlink{display:inline-block;margin-top:18px;font-family:'Space Mono';font-weight:700;font-size:.9rem;cursor:pointer;color:var(--ink);text-decoration:underline;text-underline-offset:3px}
+  .backlink:hover{color:var(--shock)}
+
+  /* success */
+  .done{display:none;text-align:center;border:var(--line);box-shadow:var(--shadow);padding:48px 26px;background:var(--shock);color:var(--paper)}
+  .done.show{display:block;animation:pop .25s ease}
+  .done .big{font-size:3rem}
+  .done h3{font-size:1.8rem;margin:10px 0 10px;color:var(--paper)}
+  .done p{max-width:420px;margin:0 auto}
+
+  /* ---------- manifesto ---------- */
+  .manifesto{border-top:var(--line);margin-top:40px;padding:60px 0 30px;text-align:center}
+  .manifesto h2{font-size:clamp(1.8rem,6vw,3rem);margin-bottom:18px}
+  .manifesto p{max-width:600px;margin:0 auto;font-size:1.05rem}
+  .manifesto .pop{color:var(--shock);font-family:'Archivo Black'}
+
+  footer{border-top:var(--line);background:var(--ink);color:var(--paper);padding:24px 20px;text-align:center;font-family:'Space Mono';font-size:.78rem;letter-spacing:.1em}
+  footer a{color:var(--sun);text-decoration:none}
+
+  /* reduced motion */
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important;scroll-behavior:auto}
+  }
+</style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="brand">FRAN<span>KIEZ</span></div>
+    <a class="x" href="#" target="_blank" rel="noopener">follow @FRANKIEZ ↗</a>
+  </div>
+
+  <div class="hero-bg">
+  <header class="hero wrap">
+    <span class="eyebrow">FRANKIEZ · 3333 NFTs · Ethereum</span>
+    <h1>WELCOME TO<br/>THE <span class="out">FRANKIEZ</span> GANG</h1>
+    <p class="lead">3333 hand-drawn frankiez with too much attitude. banana suits, fire eyes, drama queens — every one of them unhinged, every one of them yours to claim.</p>
+    <div class="cta-row">
+      <a class="btn shock" href="#secure">secure your spot</a>
+      <a class="btn" href="#" target="_blank" rel="noopener">@FRANKIEZ ↗</a>
+    </div>
+
+    <div class="strip" role="list" aria-label="frankie previews">
+      <div class="chip" role="listitem"><img src="assets/web/9.jpg" alt="Banana suit frankie" loading="lazy" /></div>
+      <div class="chip" role="listitem"><img src="assets/web/38.jpg" alt="Hypno-eyed tie-dye frankie" loading="lazy" /></div>
+      <div class="chip" role="listitem"><img src="assets/web/49.jpg" alt="Drama queen frankie" loading="lazy" /></div>
+      <div class="chip" role="listitem"><img src="assets/web/8.jpg" alt="Mustache blazer frankie" loading="lazy" /></div>
+      <div class="chip" role="listitem"><img src="assets/web/25.jpg" alt="Screaming hoodie frankie" loading="lazy" /></div>
+      <div class="chip" role="listitem"><img src="assets/web/17.jpg" alt="Hot dog frankie with shades" loading="lazy" /></div>
+    </div>
+  </header>
+  </div>
+
+  <main class="wrap">
+
+    <section class="stats" aria-label="collection facts">
+      <div class="stat"><div class="k">Supply</div><div class="v">3333</div></div>
+      <div class="stat"><div class="k">Chain</div><div class="v">ETH</div></div>
+      <div class="stat"><div class="k">Mint date</div><div class="v">TBA</div></div>
+      <div class="stat"><div class="k">Price</div><div class="v">TBA</div></div>
+    </section>
+
+    <!-- CHOICE GATE -->
+    <section id="secure" class="sec">
+      <span class="eyebrow">who are you?</span>
+      <h2>PICK YOUR LANE</h2>
+    </section>
+    <div class="gate" id="gate">
+      <div class="gate-card a" data-go="wl">
+        <div class="ic">🐸</div>
+        <h3>I'm a collector</h3>
+        <p>secure a whitelist spot on the 3333 drop before it's gone.</p>
+      </div>
+      <div class="gate-card b" data-go="collab">
+        <div class="ic">🤝</div>
+        <h3>I represent a project</h3>
+        <p>apply to collab with FRANKIEZ as a community or project.</p>
+      </div>
+    </div>
+
+    <!-- WHITELIST PANEL -->
+    <section class="panel" id="panel-wl">
+      <div class="sec">
+        <span class="eyebrow">whitelist · open</span>
+        <h2>SECURE YOUR SPOT</h2>
+        <p style="margin-top:10px">complete the steps, then drop your address. duplicate handles and wallets get tossed.</p>
+      </div>
+
+      <div class="steps">
+        <div class="step">
+          <div class="no">01</div>
+          <div class="txt"><b>follow on X</b><span>@FRANKIEZ — your gateway to the drop</span></div>
+          <a class="open" href="#" target="_blank" rel="noopener">open ↗</a>
+        </div>
+        <div class="step">
+          <div class="no">02</div>
+          <div class="txt"><b>turn on notifications</b><span>bell icon on the profile</span></div>
+          <a class="open" href="#" target="_blank" rel="noopener">open ↗</a>
+        </div>
+        <div class="step">
+          <div class="no">03</div>
+          <div class="txt"><b>like + RT the pinned post</b><span>spread the frankiez across the timeline</span></div>
+          <a class="open" href="#" target="_blank" rel="noopener">open ↗</a>
+        </div>
+        <div class="step">
+          <div class="no">04</div>
+          <div class="txt"><b>comment under the post</b><span>tell us how bad you want in</span></div>
+          <a class="open" href="#" target="_blank" rel="noopener">open ↗</a>
+        </div>
+      </div>
+
+      <!-- 
+        ====================================================================
+        FORM SUBMISSION — backend not wired yet.
+        To collect entries later, replace the JS handler (see script below,
+        marked "WIRE BACKEND HERE") with one of:
+          • Formspree:  set <form action="https://formspree.io/f/XXXX" method="POST">
+          • Google Sheets via Apps Script web app (fetch POST)
+          • Your own API endpoint
+        For now it just shows the success screen.
+        ====================================================================
+      -->
+      <div class="form" id="wlForm">
+        <label for="eth">ETH address</label>
+        <input id="eth" type="text" placeholder="0x..." autocomplete="off" />
+        <label for="handle">your X handle</label>
+        <input id="handle" type="text" placeholder="@yourname" autocomplete="off" />
+        <label for="note">community / special requests (optional)</label>
+        <textarea id="note" placeholder="anything we should know?"></textarea>
+        <button class="btn shock" id="wlSubmit" type="button">submit →</button>
+      </div>
+
+      <div class="done" id="wlDone">
+        <div class="big">🐸</div>
+        <h3>YOU'RE ON THE LIST.</h3>
+        <p>we'll reach out when the drop goes live. keep notifications on — the frankiez move fast.</p>
+      </div>
+
+      <span class="backlink" data-back>← back to choice</span>
+    </section>
+
+    <!-- COLLAB PANEL -->
+    <section class="panel" id="panel-collab">
+      <div class="sec">
+        <span class="eyebrow">collab · open</span>
+        <h2>REPRESENT YOUR PROJECT</h2>
+        <p style="margin-top:10px">all fields required. only serious projects get a reply.</p>
+      </div>
+
+      <div class="form" id="collabForm">
+        <label for="cproj">project / X links</label>
+        <input id="cproj" type="text" placeholder="https://x.com/yourproject" autocomplete="off" />
+        <label for="ccomm">tell us about your community & why you want to collab</label>
+        <textarea id="ccomm" placeholder="who you are, size, vibe..."></textarea>
+        <label for="csup">how can you support FRANKIEZ?</label>
+        <textarea id="csup" placeholder="spaces, tweets, raffles..."></textarea>
+        <button class="btn volt" id="collabSubmit" type="button">send application →</button>
+      </div>
+
+      <div class="done" id="collabDone" style="background:var(--volt);color:var(--ink)">
+        <div class="big">🤝</div>
+        <h3 style="color:var(--ink)">APPLICATION SENT!</h3>
+        <p>we'll review and reach out through your main contact.</p>
+      </div>
+
+      <span class="backlink" data-back>← back to choice</span>
+    </section>
+
+  </main>
+
+  <section class="manifesto wrap">
+    <h2>THE MANIFESTO</h2>
+    <p>every FRANKIE is hand-drawn, layered, and let loose — backgrounds, bodies, costumes, mouths, hair, eyes, all stacked into one chaotic original. <span class="pop">no two alike. 3333 reasons to stare.</span></p>
+  </section>
+
+  <footer>
+    © FRANKIEZ · drawn for the chain · <a href="#" target="_blank" rel="noopener">X.COM/FRANKIEZ</a>
+  </footer>
+
+<script>
+  // ---------- choice gate + panels ----------
+  const gate = document.getElementById('gate');
+  const panels = {
+    wl: document.getElementById('panel-wl'),
+    collab: document.getElementById('panel-collab'),
+  };
+  const gateSec = document.getElementById('secure');
+
+  document.querySelectorAll('.gate-card').forEach(card=>{
+    card.addEventListener('click',()=>{
+      const go = card.dataset.go;
+      gate.style.display='none';
+      Object.values(panels).forEach(p=>p.classList.remove('active'));
+      panels[go].classList.add('active');
+      panels[go].scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  document.querySelectorAll('[data-back]').forEach(b=>{
+    b.addEventListener('click',()=>{
+      Object.values(panels).forEach(p=>p.classList.remove('active'));
+      gate.style.display='grid';
+      gateSec.scrollIntoView({behavior:'smooth',block:'start'});
+    });
+  });
+
+  // ---------- form handlers ----------
+  // === WIRE BACKEND HERE ===
+  // Right now these just validate lightly and show the success screen.
+  // Swap the body of each handler for a fetch() to your endpoint when ready.
+
+  document.getElementById('wlSubmit').addEventListener('click',()=>{
+    const eth = document.getElementById('eth').value.trim();
+    if(!/^0x[a-fA-F0-9]{40}$/.test(eth)){
+      alert('Enter a valid ETH address (0x… 42 chars).');
+      return;
+    }
+    // TODO: send {eth, handle, note} to backend
+    document.getElementById('wlForm').style.display='none';
+    document.getElementById('wlDone').classList.add('show');
+    document.getElementById('wlDone').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+
+  document.getElementById('collabSubmit').addEventListener('click',()=>{
+    const proj = document.getElementById('cproj').value.trim();
+    if(!proj){
+      alert('Project link is required.');
+      return;
+    }
+    // TODO: send collab fields to backend
+    document.getElementById('collabForm').style.display='none';
+    document.getElementById('collabDone').classList.add('show');
+    document.getElementById('collabDone').scrollIntoView({behavior:'smooth',block:'center'});
+  });
+</script>
+</body>
+</html>
