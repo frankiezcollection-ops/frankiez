@@ -388,32 +388,62 @@
   });
 
   // ---------- form handlers ----------
-  // === WIRE BACKEND HERE ===
-  // Right now these just validate lightly and show the success screen.
-  // Swap the body of each handler for a fetch() to your endpoint when ready.
+  // Google Sheets backend (Apps Script web app).
+  // To change where submissions go, replace this one URL:
+  const SHEET_URL = "https://script.google.com/macros/s/AKfycbywPf0s8YpCsSaPv_iYUgJ84BpKoXCBNg9izz8HuHME0OKzUlCMpTYTuH6ari_qe1k95w/exec";
+
+  function sendToSheet(payload){
+    // mode:no-cors → fire-and-forget POST; Apps Script still records the row.
+    return fetch(SHEET_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload)
+    });
+  }
 
   document.getElementById('wlSubmit').addEventListener('click',()=>{
+    const btn = document.getElementById('wlSubmit');
     const eth = document.getElementById('eth').value.trim();
+    const handle = document.getElementById('handle').value.trim();
+    const note = document.getElementById('note').value.trim();
     if(!/^0x[a-fA-F0-9]{40}$/.test(eth)){
       alert('Enter a valid ETH address (0x… 42 chars).');
       return;
     }
-    // TODO: send {eth, handle, note} to backend
-    document.getElementById('wlForm').style.display='none';
-    document.getElementById('wlDone').classList.add('show');
-    document.getElementById('wlDone').scrollIntoView({behavior:'smooth',block:'center'});
+    btn.disabled = true; btn.textContent = 'submitting…';
+    sendToSheet({ formType:'whitelist', eth, handle, note })
+      .then(()=>{
+        document.getElementById('wlForm').style.display='none';
+        document.getElementById('wlDone').classList.add('show');
+        document.getElementById('wlDone').scrollIntoView({behavior:'smooth',block:'center'});
+      })
+      .catch(()=>{
+        btn.disabled = false; btn.textContent = 'submit →';
+        alert('Something went wrong. Please try again.');
+      });
   });
 
   document.getElementById('collabSubmit').addEventListener('click',()=>{
-    const proj = document.getElementById('cproj').value.trim();
-    if(!proj){
+    const btn = document.getElementById('collabSubmit');
+    const project = document.getElementById('cproj').value.trim();
+    const community = document.getElementById('ccomm').value.trim();
+    const support = document.getElementById('csup').value.trim();
+    if(!project){
       alert('Project link is required.');
       return;
     }
-    // TODO: send collab fields to backend
-    document.getElementById('collabForm').style.display='none';
-    document.getElementById('collabDone').classList.add('show');
-    document.getElementById('collabDone').scrollIntoView({behavior:'smooth',block:'center'});
+    btn.disabled = true; btn.textContent = 'sending…';
+    sendToSheet({ formType:'collab', project, community, support })
+      .then(()=>{
+        document.getElementById('collabForm').style.display='none';
+        document.getElementById('collabDone').classList.add('show');
+        document.getElementById('collabDone').scrollIntoView({behavior:'smooth',block:'center'});
+      })
+      .catch(()=>{
+        btn.disabled = false; btn.textContent = 'send application →';
+        alert('Something went wrong. Please try again.');
+      });
   });
 </script>
 </body>
